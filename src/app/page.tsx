@@ -19,21 +19,25 @@ export default function Home() {
         Twoja aplikacja NEXT.JS się odpala
       </h1>
       <div className="flex flex-row items-center justify-center gap-4 pt-10">
-        <Button asChild>
-          <Link href="https://docs.solvro.pl/">Docs Solvro</Link>
-        </Button>
-        <Button asChild>
-          <Link href="https://github.com/orgs/Solvro/teams/kn-solvro">
-            <Image
-              src="/github-mark.svg"
-              alt="Github"
-              style={{ objectFit: "cover" }}
-              width={20}
-              height={20}
-            />
-            Github
-          </Link>
-        </Button>
+        <Button
+          nativeButton={false}
+          render={<Link href="https://docs.solvro.pl/">Docs Solvro</Link>}
+        ></Button>
+        <Button
+          nativeButton={false}
+          render={
+            <Link href="https://github.com/orgs/Solvro/teams/kn-solvro">
+              <Image
+                src="/github-mark.svg"
+                alt="Github"
+                style={{ objectFit: "cover" }}
+                width={20}
+                height={20}
+              />
+              Github
+            </Link>
+          }
+        ></Button>
       </div>
       <footer className="absolute right-0 bottom-0 left-0 p-4 text-center text-white">
         <p className="text-sm">

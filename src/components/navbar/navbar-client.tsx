@@ -23,12 +23,10 @@ export function NavbarClient() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Logo className="text-2xl" />
 
-        {/* Desktop Navigation */}
         <div className="hidden lg:flex">
           <NavLinks variant="desktop" />
         </div>
 
-        {/* Akcja / Przycisk Dołącz */}
         <div className="hidden items-center gap-4 lg:flex">
           <Button
             size="sm"
@@ -38,7 +36,6 @@ export function NavbarClient() {
           />
         </div>
 
-        {/* Mobile Navigation (Hamburger) */}
         <div className="lg:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger

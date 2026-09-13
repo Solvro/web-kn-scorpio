@@ -50,13 +50,14 @@ function PaginationLink({
 }: PaginationLinkProps) {
   return (
     <Button
-      variant={isActive ? "outline" : "ghost"}
+      variant={isActive === true ? "outline" : "ghost"}
       size={size}
       className={cn(className)}
       nativeButton={false}
       render={
+        // eslint-disable-next-line jsx-a11y/anchor-has-content
         <a
-          aria-current={isActive ? "page" : undefined}
+          aria-current={isActive === true ? "page" : undefined}
           data-slot="pagination-link"
           data-active={isActive}
           {...props}

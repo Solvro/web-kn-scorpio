@@ -1,9 +1,8 @@
 "use client";
 
 import { cn } from "cn";
-import useEmblaCarousel, {
-  type UseEmblaCarouselType,
-} from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
+import type { UseEmblaCarouselType } from "embla-carousel-react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
 
@@ -14,12 +13,12 @@ type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
-type CarouselProps = {
+interface CarouselProps {
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
-};
+}
 
 type CarouselContextProps = {
   carouselRef: ReturnType<typeof useEmblaCarousel>[0];
@@ -35,7 +34,7 @@ const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 function useCarousel() {
   const context = React.useContext(CarouselContext);
 
-  if (!context) {
+  if (context == null) {
     throw new Error("useCarousel must be used within a <Carousel />");
   }
 
@@ -58,16 +57,18 @@ function Carousel({
     },
     plugins,
   );
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false);
+  const [canScrollPrevious, setCanScrollPrevious] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
   const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return;
-    setCanScrollPrev(api.canScrollPrev());
+    if (api == null) {
+      return;
+    }
+    setCanScrollPrevious(api.canScrollPrev());
     setCanScrollNext(api.canScrollNext());
   }, []);
 
-  const scrollPrev = React.useCallback(() => {
+  const scrollPrevious = React.useCallback(() => {
     api?.scrollPrev();
   }, [api]);
 
@@ -79,28 +80,34 @@ function Carousel({
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        scrollPrev();
+        scrollPrevious();
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
         scrollNext();
       }
     },
-    [scrollPrev, scrollNext],
+    [scrollPrevious, scrollNext],
   );
 
   React.useEffect(() => {
-    if (!api || !setApi) return;
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
+    if (api == null || setApi == null) {
+      return;
+    }
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-pass-data-to-parent
     setApi(api);
   }, [api, setApi]);
 
   React.useEffect(() => {
-    if (!api) return;
+    if (api == null) {
+      return;
+    }
     onSelect(api);
     api.on("reInit", onSelect);
     api.on("select", onSelect);
 
     return () => {
-      api?.off("select", onSelect);
+      api.off("select", onSelect);
     };
   }, [api, onSelect]);
 
@@ -108,13 +115,14 @@ function Carousel({
     <CarouselContext.Provider
       value={{
         carouselRef,
-        api: api,
+        api,
         opts,
         orientation:
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
-        scrollPrev,
+        scrollPrev: scrollPrevious,
         scrollNext,
-        canScrollPrev,
+        canScrollPrev: canScrollPrevious,
         canScrollNext,
       }}
     >

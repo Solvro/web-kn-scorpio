@@ -1,8 +1,11 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "dev"]
   pull_request:
 
 jobs:
@@ -10,18 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          cache: "true"
+
       - name: Setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Setup build cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx') }}
@@ -29,24 +37,20 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Check commit name
         if: github.event_name == 'pull_request'
-        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+        run: pnpm commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
-      - name: Check formatting
-        run: npm run format:check
-        if: always()
-
-      - name: Lint code
-        run: npm run lint
-        if: always()
-
-      - name: Check types
-        run: npm run types:check
+      - name: Format check
+        run: pnpm run format:check
         if: always()
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
+        if: always()
+
+      - name: Lint
+        run: pnpm run lint
         if: always()

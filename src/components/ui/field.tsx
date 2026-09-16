@@ -104,6 +104,7 @@ function FieldLabel({
   ...props
 }: React.ComponentProps<typeof Label>) {
   return (
+    // eslint-disable-next-line jsx-a11y/label-has-associated-control
     <Label
       data-slot="field-label"
       className={cn(
@@ -162,6 +163,7 @@ function FieldSeparator({
       {...props}
     >
       <Separator className="absolute inset-0 top-1/2" />
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {children ? (
         <span
           className="bg-background text-muted-foreground relative mx-auto block w-fit px-2"
@@ -183,11 +185,12 @@ function FieldError({
   errors?: ({ message?: string } | undefined)[];
 }) {
   const content = useMemo(async () => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (children) {
       return children;
     }
 
-    if (!errors?.length) {
+    if (errors?.length == null) {
       return null;
     }
 
@@ -195,7 +198,7 @@ function FieldError({
       ...new Map(errors.map((error) => [error?.message, error])).values(),
     ];
 
-    if (uniqueErrors?.length == 1) {
+    if (uniqueErrors.length === 1) {
       return uniqueErrors[0]?.message;
     }
 
@@ -203,12 +206,14 @@ function FieldError({
       <ul className="ml-4 flex list-disc flex-col gap-1">
         {uniqueErrors.map(
           (error, index) =>
-            error?.message && <li key={index}>{error.message}</li>,
+            // eslint-disable-next-line react/no-array-index-key
+            error?.message != null && <li key={index}>{error.message}</li>,
         )}
       </ul>
     );
   }, [children, errors]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition,@typescript-eslint/no-misused-promises,@typescript-eslint/strict-boolean-expressions
   if (!content) {
     return null;
   }

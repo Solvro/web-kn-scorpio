@@ -29,7 +29,9 @@ export default function RootLayout({
       <QueryProvider>
         <body className={`${space_grotesk.variable} font-sans antialiased`}>
           <Navbar />
-          <TooltipProvider>{children}</TooltipProvider>
+          <div className="mx-auto max-w-7xl">
+            <TooltipProvider>{children}</TooltipProvider>
+          </div>
           <Footer />
           <ScrollToTop />
         </body>

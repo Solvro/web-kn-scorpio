@@ -1,176 +1,173 @@
 "use client";
 
-import { ClockIcon, MailIcon, SendIcon, SparklesIcon } from "lucide-react";
+import {
+  ClipboardTextIcon,
+  CursorClickIcon,
+  EnvelopeSimpleIcon,
+  PaperPlaneTiltIcon,
+} from "@phosphor-icons/react";
+import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 
+import { DepartmentExplorer } from "@/app/recruitment/department-explorer";
+import { RecruitmentHero } from "@/app/recruitment/recruitment-hero";
 import {
   APPLICATION_FORM_URL,
   RECRUITMENT_DEADLINE,
-  RECRUITMENT_DEPARTMENTS,
   RECRUITMENT_EMAIL,
 } from "@/app/recruitment/temporary-data";
-import { Badge } from "@/components/ui/badge";
+import { FullBleedSection } from "@/components/full-bleed-section";
+import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
-export function RecruitmentPageClient() {
+const JOIN_STEPS = [
+  {
+    icon: CursorClickIcon,
+    title: "Wybierz dział",
+    text: "Przejrzyj pięć działów i znajdź ten, który Cię ciekawi.",
+  },
+  {
+    icon: ClipboardTextIcon,
+    title: "Rozwiąż zadanie",
+    text: "Każdy dział ma zadanie rekrutacyjne. Pokaż, jak podchodzisz do problemu.",
+  },
+  {
+    icon: PaperPlaneTiltIcon,
+    title: "Wyślij zgłoszenie",
+    text: "Wypełnij formularz, a my skontaktujemy się z Tobą.",
+  },
+];
+
+const BENEFITS = [
+  {
+    title: "Zawody na całym świecie",
+    text: "Startujemy w Rover Challenge w Europie, Azji, Ameryce Północnej i Australii.",
+    image: "/images/field-desert.jpg",
+    alt: "Łazik Scorpio na pustynnym torze zawodów",
+    className: "md:col-span-7 md:row-span-2 min-h-[420px]",
+  },
+  {
+    title: "Praktyka zamiast teorii",
+    text: "Projektujesz, budujesz i testujesz części, które naprawdę jeżdżą.",
+    image: "/images/field-electronics.jpg",
+    alt: "Praca przy elektronice łazika",
+    className: "md:col-span-5 min-h-[260px]",
+  },
+  {
+    title: "Jeden projekt, wiele kierunków",
+    text: "Mechanicy, elektronicy, programiści, naukowcy i marketingowcy przy jednym łaziku.",
+    image: "/images/software-tent.jpg",
+    alt: "Zespół operatorów przy laptopach podczas zawodów",
+    className: "md:col-span-5 min-h-[260px]",
+  },
+];
+
+function JoinSteps() {
+  const reduce = useReducedMotion() ?? false;
+
   return (
-    <main className="container mx-auto px-4 py-12 md:py-20">
-      <section className="relative left-1/2 -mt-12 mb-16 w-screen -translate-x-1/2 overflow-hidden pt-28 pb-16 md:-mt-20">
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="bg-primary/10 absolute -top-32 left-1/2 h-88 w-lg -translate-x-1/2 rounded-full blur-[110px]" />
-          <div className="via-primary/30 absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent" />
-          <div className="from-background via-background/60 absolute inset-x-0 bottom-0 h-36 bg-linear-to-t to-transparent" />
-        </div>
+    <section className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:py-28">
+      <Reveal>
+        <h2 className="text-foreground text-4xl font-bold tracking-tighter sm:text-5xl">
+          Jak dołączyć
+        </h2>
+      </Reveal>
 
-        <div className="container mx-auto px-4 text-center">
-          <div className="mx-auto max-w-3xl">
-            <Badge
-              variant="outline"
-              className="border-primary/30 bg-background/80 text-primary shadow-sm backdrop-blur-md"
-            >
-              <ClockIcon className="size-3.5" />
-              Rekrutacja trwa do {RECRUITMENT_DEADLINE}!
-            </Badge>
-
-            <h1 className="text-foreground mt-5 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-              Dołącz do <span className="text-primary">SCORPIO</span>
-            </h1>
-
-            <p className="text-muted-foreground mx-auto mt-5 max-w-2xl text-base leading-relaxed sm:text-lg">
-              Chcesz zostać częścią jednego z najbardziej interdyscyplinarnych
-              projektów na Politechnice Wrocławskiej? Studia nie muszą być tylko
-              nudną teorią – dołącz do nas i zastosuj swoją wiedzę w praktyce!
+      <ol className="relative mt-14 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+        {/* Connector that draws itself once the steps scroll into view */}
+        <motion.span
+          aria-hidden
+          className="bg-primary/50 absolute top-7 right-[16%] left-[16%] hidden h-px origin-left md:block"
+          initial={reduce ? false : { scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        />
+        {JOIN_STEPS.map((step, index) => (
+          <motion.li
+            key={step.title}
+            className="relative flex flex-col md:items-center md:text-center"
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{
+              duration: 0.6,
+              delay: 0.25 + index * 0.25,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            <span className="border-primary/50 bg-background text-primary relative flex size-14 items-center justify-center rounded-full border">
+              <step.icon weight="bold" className="size-6" />
+            </span>
+            <h3 className="text-foreground mt-6 text-xl font-bold">
+              {step.title}
+            </h3>
+            <p className="text-muted-foreground mt-2 max-w-xs text-base leading-relaxed">
+              {step.text}
             </p>
-
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button
-                size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
-                nativeButton={false}
-                render={
-                  <a
-                    href={APPLICATION_FORM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <SendIcon className="size-4" />
-                    Dołącz do nas!
-                  </a>
-                }
-              />
-              <Button
-                size="lg"
-                variant="outline"
-                className="gap-2"
-                nativeButton={false}
-                render={
-                  <a href={`mailto:${RECRUITMENT_EMAIL}`}>
-                    <MailIcon className="size-4" />
-                    Napisz do nas!
-                  </a>
-                }
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-3xl text-center">
-        <div className="mb-10 flex items-center justify-center gap-3">
-          <div className="bg-primary/10 border-primary/20 text-primary rounded-lg border p-2">
-            <SparklesIcon className="size-6" />
-          </div>
-          <h2 className="text-foreground text-2xl font-bold tracking-tight">
-            Szukamy pasjonatów do pięciu działów
-          </h2>
-        </div>
-        <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-          Chcesz rozwijać swoje umiejętności w świetnym zespole? U nas masz taką
-          szansę! Sprawdź zadania rekrutacyjne poniżej i dołącz do nas już dziś.
-        </p>
-      </section>
-
-      <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {RECRUITMENT_DEPARTMENTS.map((dept) => (
-          <Card key={dept.slug} className="overflow-hidden p-0">
-            <div className="relative h-40 w-full">
-              <Image
-                src={dept.image.src}
-                alt={dept.image.alt}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-3 left-4 flex items-center gap-2">
-                <div className="bg-primary/90 text-primary-foreground rounded-md p-1.5">
-                  <dept.icon className="size-4" />
-                </div>
-                <span className="text-sm font-bold text-white drop-shadow">
-                  {dept.name}
-                </span>
-              </div>
-            </div>
-
-            <CardHeader className="px-6 pt-5">
-              <CardTitle className="sr-only">{dept.name}</CardTitle>
-            </CardHeader>
-
-            <CardContent className="px-6">
-              {dept.description.map((paragraph) => (
-                <p
-                  key={paragraph}
-                  className="text-muted-foreground text-sm leading-relaxed"
-                >
-                  {paragraph}
-                </p>
-              ))}
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {dept.tools.map((tool) => (
-                  <Badge key={tool} variant="outline-sm">
-                    {tool}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-
-            <CardFooter className="border-t px-6 py-4">
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full"
-                nativeButton={false}
-                render={
-                  <a
-                    href={dept.taskUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Zadanie rekrutacyjne
-                  </a>
-                }
-              />
-            </CardFooter>
-          </Card>
+          </motion.li>
         ))}
+      </ol>
+    </section>
+  );
+}
 
-        <Card className="flex flex-col items-center justify-center gap-4 border-dashed p-8 text-center">
-          <div className="bg-primary/10 border-primary/20 text-primary rounded-full border p-3">
-            <SendIcon className="size-6" />
-          </div>
-          <CardTitle>Wypełnij formularz i zostań członkiem zespołu!</CardTitle>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            Wybrałeś już dział? Wyślij swoją aplikację, a my się z Tobą
-            skontaktujemy.
-          </p>
+function Benefits() {
+  return (
+    <section className="mx-auto w-full max-w-7xl px-4 pb-24 sm:px-6 lg:pb-32">
+      <Reveal>
+        <h2 className="text-foreground text-4xl font-bold tracking-tighter sm:text-5xl">
+          Co zyskujesz
+        </h2>
+      </Reveal>
+
+      <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-12">
+        {BENEFITS.map((benefit, index) => (
+          <Reveal
+            key={benefit.title}
+            delay={index * 100}
+            className={cn(
+              "group relative overflow-hidden rounded-lg",
+              benefit.className,
+            )}
+          >
+            <Image
+              src={benefit.image}
+              alt={benefit.alt}
+              fill
+              sizes="(min-width: 768px) 58vw, 100vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+            />
+            <div className="from-background via-background/50 absolute inset-0 bg-linear-to-t to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+              <h3 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
+                {benefit.title}
+              </h3>
+              <p className="text-foreground/80 mt-2 max-w-md text-sm leading-relaxed sm:text-base">
+                {benefit.text}
+              </p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ClosingBand() {
+  return (
+    <FullBleedSection className="bg-primary">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-20 sm:px-6 lg:flex-row lg:items-end lg:justify-between lg:py-24">
+        <Reveal>
+          <h2 className="text-primary-foreground max-w-2xl text-4xl leading-[1.05] font-bold tracking-tighter sm:text-5xl lg:text-6xl">
+            Rekrutacja trwa do {RECRUITMENT_DEADLINE}.
+          </h2>
+        </Reveal>
+        <Reveal delay={150} className="flex flex-col gap-3 sm:flex-row">
           <Button
-            className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
+            size="lg"
+            className="bg-background text-foreground hover:bg-background/85 h-12 gap-2 px-6 text-base active:scale-[0.98]"
             nativeButton={false}
             render={
               <a
@@ -178,12 +175,37 @@ export function RecruitmentPageClient() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Dołącz do nas!
+                <PaperPlaneTiltIcon weight="bold" />
+                Wyślij zgłoszenie
               </a>
             }
           />
-        </Card>
+          <Button
+            size="lg"
+            variant="ghost"
+            className="text-primary-foreground hover:text-primary-foreground border-primary-foreground/50 h-12 gap-2 border px-6 text-base hover:bg-white/10 active:scale-[0.98]"
+            nativeButton={false}
+            render={
+              <a href={`mailto:${RECRUITMENT_EMAIL}`}>
+                <EnvelopeSimpleIcon weight="bold" />
+                Napisz do nas
+              </a>
+            }
+          />
+        </Reveal>
       </div>
+    </FullBleedSection>
+  );
+}
+
+export function RecruitmentPageClient() {
+  return (
+    <main className="flex flex-col">
+      <RecruitmentHero />
+      <JoinSteps />
+      <DepartmentExplorer />
+      <Benefits />
+      <ClosingBand />
     </main>
   );
 }

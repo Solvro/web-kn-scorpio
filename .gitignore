@@ -47,6 +47,6 @@ next-env.d.ts
 .idea
 
 #cms
-/cms/data.db
+#/cms/data.db
 /cms/node_modules
-/cms/uploads
+#/cms/uploads

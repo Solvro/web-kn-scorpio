@@ -1,0 +1,15 @@
+{
+  "name": "kn-scorpio-cms",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "directus start",
+    "start": "directus start"
+  },
+  "dependencies": {
+    "directus": "^12.4.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

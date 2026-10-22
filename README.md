@@ -1,107 +1,77 @@
-# Solvro Next.js template
+# 🚀 KN Scorpio
 
-## Welcome to the repository of Solvro Next.js template
+## Stack
 
-A standardized Next.js template maintained by Solvro Science Club at Wrocław University of Science and Technology. This template incorporates our best practices, coding standards, and recommended project structure for web development projects. It serves as a starting point for new Solvro members and projects, ensuring consistency and quality across our initiatives.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
 
-## Technologies used
+## Prerequisites
 
-- Next.js
-- React.js
-- TypeScript
-- Tailwind CSS
-- Shadcn/ui
-- Tanstack Query
+- Node.js 22+
+- pnpm (via Corepack)
+- Directus CMS dependencies in the `cms/` folder
 
-## Links
+## Run the project
 
-[![docs.solvro.pl](https://i.imgur.com/fuV0gra.png)](https://docs.solvro.pl)
-
-## Development
-
-### 1. Use this template
-
-![Homepage](https://i.imgur.com/RXm10f8.png)
-
-### 2. Install Dependencies
+### 1) Install dependencies
 
 ```bash
-cd web-template
-npm install
+git clone git@github.com:Solvro/web-kn-scorpio.git
+cd web-kn-scorpio
+corepack enable
+pnpm install
 ```
 
-### 3. Run the Project
+### 2) Start Directus CMS
 
 ```bash
-npm run dev
+cd cms
+cp .env.example .env
+pnpm install
+pnpm dev
 ```
 
-### 5. View the Application
+Directus runs at http://localhost:8055.
 
-Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
+### 3) Start the website
 
-## Working with git
-
-### Github Solvro Handbook
-
-<https://docs.solvro.pl/guides/github>
-
-### SSH
-
-If you are a Windows user, follow this [tutorial](https://www.youtube.com/watch?v=vExsOTgIOGw) to connect via SSH
-
-### Building a new feature
-
-1. Checkout and update main branch
+In a second terminal:
 
 ```bash
-   git checkout main
-   git pull origin main
-   git fetch
+cd /path/to/web-kn-scorpio
+cp .env.example .env
+pnpm dev
 ```
 
-2. Create new feature branch
+The app runs at http://localhost:3000.
 
-```bash
-   git checkout -b feat/x_my_feature_branch
+### Environment notes
+
+- The website reads the CMS URL from `NEXT_PUBLIC_DIRECTUS_URL` in the root `.env` file.
+- Default value is `http://localhost:8055` when the variable is not set.
+- The CMS server config is stored in `cms/.env` and should include:
+
+```env
+PUBLIC_URL="http://localhost:8055"
+CORS_ENABLED="true"
+CORS_ORIGIN="true"
 ```
 
-> 'x' stands for issue number; this command will create and checkout a new branch named feat/x_my_feature_branch
+## Contributing
 
-3. Commit your changes:
+1. Fork the repo, branch off `main` as `type/short-description` (e.g. `feat/course-filters`, `fix/login-redirect`)
+2. Commit using [Conventional Commits](https://docs.solvro.pl/git-github/solvro#nazewnictwo-commit%C3%B3w) (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`, `ci:`, `build:`) — commitlint enforces this
+3. Push to your fork, open a PR — CI runs checks automatically
+4. Never push directly to `main`
 
-```bash
-   git add .
-   git commit -m "<description>"
-```
+Full workflow: [Solvro GitHub Handbook](https://docs.google.com/document/d/1Sb5lYqYLnYuecS1Essn3YwietsbuLPCTsTuW0EMpG5o/edit?usp=sharing)
 
-4. Push to remote:
+## Contributors
 
-```bash
-   git push origin feat/x_my_feature_branch
-```
-
-5. Create a Pull Request on GitHub and wait for a review
-
-### ⚠️ Important ⚠️
-
-- Do not push directly to main branch!
-- Please remember to commit before checking out to a different branch
-- Clean up after a successful merge
-
-  ```bash
-  git branch -d feat/x_my_feature_branch
-  git push origin --delete feat/x_my_feature_branch
-  ```
+[![Contributors](https://contrib.rocks/image?repo=Solvro/web-kn-scorpio)](https://github.com/Solvro/web-kn-scorpio/graphs/contributors)
 
 ## Contact
 
-For questions or suggestions, please reach out to us:
-
-- ✉️ Email: <kn.solvro@pwr.edu.pl>
-- 🌐 Website: [solvro.pwr.edu.pl](https://solvro.pwr.edu.pl/)
-- 📘 Facebook: [KN Solvro](https://www.facebook.com/knsolvro)
-
----
-
-Thank you for reading! Stay tuned for more updates!
+📧 [kn.solvro@pwr.edu.pl](mailto:kn.solvro@pwr.edu.pl) · 🌐 [solvro.pwr.edu.pl](https://solvro.pwr.edu.pl/) · 📘 [Facebook](https://www.facebook.com/knsolvro)

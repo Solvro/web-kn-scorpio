@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!/.env.example
+/cms/.env*
+!/cms/.env.example
 
 # vercel
 .vercel
@@ -39,3 +42,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# idea
+.idea
+
+#cms
+/cms/data.db
+/cms/node_modules
+/cms/uploads

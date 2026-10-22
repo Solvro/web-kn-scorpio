@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 
+import { Footer } from "@/components/footer";
+import { Navbar } from "@/components/navbar";
+import { ScrollToTop } from "@/components/scroll-to-top";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryProvider } from "@/lib/query-client";
 
 import "./globals.css";
@@ -24,7 +28,12 @@ export default function RootLayout({
     <html lang="en">
       <QueryProvider>
         <body className={`${space_grotesk.variable} font-sans antialiased`}>
-          {children}
+          <Navbar />
+          <div className="mx-auto max-w-7xl">
+            <TooltipProvider>{children}</TooltipProvider>
+          </div>
+          <Footer />
+          <ScrollToTop />
         </body>
       </QueryProvider>
     </html>

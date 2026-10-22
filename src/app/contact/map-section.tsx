@@ -6,8 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getWorkshops } from "@/lib/api/workshops";
 
-export function MapSection() {
+export async function MapSection() {
+  const workshops = await getWorkshops();
+
   return (
     <section className="mt-20 space-y-6">
       <div className="flex items-center gap-3">
@@ -26,39 +29,24 @@ export function MapSection() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="p-6">
-          <CardHeader>
-            <span className="text-primary flex items-center gap-2 text-sm font-semibold uppercase">
-              <WrenchIcon className="size-4" />
-              Warsztat #1
-            </span>
-            <CardTitle className="mt-1">Akademik T-22, Wittigowo</CardTitle>
-          </CardHeader>
-          <CardDescription>
-            <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-              ul. Zygmunta Wróblewskiego 25
-              <br />
-              51-627 Wrocław
-            </p>
-          </CardDescription>
-        </Card>
-
-        <Card className="p-6">
-          <CardHeader>
-            <span className="text-primary flex items-center gap-2 text-sm font-semibold uppercase">
-              <WrenchIcon className="size-4" />
-              Warsztat #2
-            </span>
-            <CardTitle className="mt-1">Akademik T-17, Wittigowo</CardTitle>
-          </CardHeader>
-          <CardDescription>
-            <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-              ul. Zygmunta Wróblewskiego 27
-              <br />
-              51-627 Wrocław
-            </p>
-          </CardDescription>
-        </Card>
+        {workshops.map((workshop, index) => (
+          <Card className="p-6" key={workshop.id}>
+            <CardHeader>
+              <span className="text-primary flex items-center gap-2 text-sm font-semibold uppercase">
+                <WrenchIcon className="size-4" />
+                Warsztat #{index + 1}
+              </span>
+              <CardTitle className="mt-1">{workshop.location}</CardTitle>
+            </CardHeader>
+            <CardDescription>
+              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                {workshop.street}
+                <br />
+                {workshop.city}
+              </p>
+            </CardDescription>
+          </Card>
+        ))}
       </div>
 
       <Card className="h-80 p-2">

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Building2Icon,
   MailIcon,
@@ -12,7 +10,6 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/app/contact/contact-form";
 import { ManagementTeam } from "@/app/contact/management-team";
 import { MapSection } from "@/app/contact/map-section";
-import { CONTACT_DEPARTMENTS } from "@/app/contact/temporary-data";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -22,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getContactDepartments } from "@/lib/api/contact-departments";
 
 export const metadata: Metadata = {
   title: "Kontakt | KN SCORPIO",
@@ -29,7 +27,9 @@ export const metadata: Metadata = {
     "Skontaktuj się z Kołem Naukowym Off-Road SCORPIO na Politechnice Wrocławskiej.",
 };
 
-export function ContactPageClient() {
+export async function ContactPageClient() {
+  const contactDepartments = await getContactDepartments();
+
   return (
     <main className="container mx-auto px-4 py-12 md:py-20">
       <section className="relative left-1/2 -mt-12 mb-16 w-screen -translate-x-1/2 overflow-hidden pt-28 pb-16 md:-mt-20">
@@ -93,7 +93,7 @@ export function ContactPageClient() {
             <h3 className="text-foreground text-sm font-semibold tracking-wider uppercase">
               Dedykowany kontakt
             </h3>
-            {CONTACT_DEPARTMENTS.map((dept) => (
+            {contactDepartments.map((dept) => (
               <Card key={dept.name}>
                 <CardHeader>
                   <span className="text-primary text-xs font-semibold">

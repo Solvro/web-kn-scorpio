@@ -8,11 +8,27 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-import { ACADEMIC_ADVISORS, BOARD_MEMBERS } from "@/app/contact/temporary-data";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { getAcademicAdvisors } from "@/lib/api/academic-advisors";
+import { getManagementTeam } from "@/lib/api/management-team";
 
-export function ManagementTeam() {
+function withProtocol(url: string): string {
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  return `https://${url}`;
+}
+
+export async function ManagementTeam() {
+  const managementTeam = await getManagementTeam();
+  const academicAdvisors = await getAcademicAdvisors();
+
+  if (managementTeam.length === 0 || academicAdvisors.length === 0) {
+    return null;
+  }
+
   return (
     <>
       <section className="mt-20">
@@ -32,16 +48,17 @@ export function ManagementTeam() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3 lg:grid-cols-4">
-          {BOARD_MEMBERS.map((member) => (
+          {managementTeam.map((member) => (
             <Card key={member.name}>
               <CardContent className="flex flex-col items-center justify-center">
                 <div className="border-border/80 bg-muted relative my-2 flex size-48 shrink-0 items-center justify-center overflow-hidden rounded-full border">
-                  {member.src ? (
+                  {member.avatar ? (
                     <Image
-                      src={member.src}
+                      src={member.avatar}
                       alt={member.name}
-                      fill
                       className="object-cover"
+                      fill
+                      unoptimized
                     />
                   ) : (
                     <UserIcon className="text-muted-foreground/50 size-20" />
@@ -80,16 +97,17 @@ export function ManagementTeam() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          {ACADEMIC_ADVISORS.map((advisor) => (
+          {academicAdvisors.map((advisor) => (
             <Card key={advisor.name}>
               <CardContent className="flex flex-col items-center justify-center">
                 <div className="border-border/80 bg-muted relative my-2 flex size-48 shrink-0 items-center justify-center overflow-hidden rounded-full border">
-                  {advisor.src ? (
+                  {advisor.avatar ? (
                     <Image
-                      src={advisor.src}
+                      src={advisor.avatar}
                       alt={advisor.name}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                   ) : (
                     <UserIcon className="text-muted-foreground/50 size-20" />
@@ -101,19 +119,30 @@ export function ManagementTeam() {
                   </p>
                 </div>
               </CardContent>
-              <CardFooter className="flex-col items-start border-t px-2">
-                <p className="flex items-center gap-2">
+              <CardFooter className="flex-col items-center gap-2 border-t px-2 py-2">
+                <a
+                  href={`mailto:${advisor.email}`}
+                  className="text-foreground hover:text-primary flex items-center justify-center gap-2 text-center transition-colors"
+                >
                   <MailIcon className="text-primary size-4" />
                   {advisor.email}
-                </p>
-                <p className="flex items-center gap-2">
+                </a>
+                <a
+                  href={`tel:${advisor.phone}`}
+                  className="text-foreground hover:text-primary flex items-center justify-center gap-2 text-center transition-colors"
+                >
                   <PhoneIcon className="text-primary size-4" />
                   {advisor.phone}
-                </p>
-                <p className="flex items-center gap-2">
+                </a>
+                <a
+                  href={withProtocol(advisor.web)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground hover:text-primary flex items-center justify-center gap-2 text-center transition-colors"
+                >
                   <GlobeIcon className="text-primary size-4" />
                   {advisor.web}
-                </p>
+                </a>
               </CardFooter>
             </Card>
           ))}

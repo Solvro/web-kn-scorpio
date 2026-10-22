@@ -1,7 +1,5 @@
 # 🚀 KN Scorpio
 
-TODO
-
 ## Stack
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white)
@@ -9,17 +7,57 @@ TODO
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
 
-## Getting Started
+## Prerequisites
+
+- Node.js 22+
+- pnpm (via Corepack)
+- Directus CMS dependencies in the `cms/` folder
+
+## Run the project
+
+### 1) Install dependencies
 
 ```bash
 git clone git@github.com:Solvro/web-kn-scorpio.git
 cd web-kn-scorpio
+corepack enable
 pnpm install
+```
+
+### 2) Start Directus CMS
+
+```bash
+cd cms
+cp .env.example .env
+pnpm install
+pnpm dev
+```
+
+Directus runs at http://localhost:8055.
+
+### 3) Start the website
+
+In a second terminal:
+
+```bash
+cd /path/to/web-kn-scorpio
 cp .env.example .env
 pnpm dev
 ```
 
-App runs at [localhost:3000](http://localhost:3000).
+The app runs at http://localhost:3000.
+
+### Environment notes
+
+- The website reads the CMS URL from `NEXT_PUBLIC_DIRECTUS_URL` in the root `.env` file.
+- Default value is `http://localhost:8055` when the variable is not set.
+- The CMS server config is stored in `cms/.env` and should include:
+
+```env
+PUBLIC_URL="http://localhost:8055"
+CORS_ENABLED="true"
+CORS_ORIGIN="true"
+```
 
 ## Contributing
 

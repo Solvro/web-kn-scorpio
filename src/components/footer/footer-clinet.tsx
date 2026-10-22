@@ -16,8 +16,13 @@ import Link from "next/link";
 
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
+import type { General } from "@/lib/api/general";
 
-export function FooterClient() {
+interface FooterClientProps {
+  generalInfo: General;
+}
+
+export function FooterClient({ generalInfo }: FooterClientProps) {
   return (
     <footer className="border-primary bg-background text-foreground relative border-t-2">
       <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
@@ -72,13 +77,11 @@ export function FooterClient() {
               </h3>
               <div className="text-muted-foreground space-y-3 text-sm">
                 <a
-                  href="mailto:marketing@scorpio.pwr.edu.pl"
+                  href={`mailto:${generalInfo.contact_email}`}
                   className="group hover:text-primary flex items-center gap-2.5 transition-colors"
                 >
                   <MailIcon className="text-primary h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
-                  <span className="break-all">
-                    marketing@scorpio.pwr.edu.pl
-                  </span>
+                  <span className="break-all">{generalInfo.contact_email}</span>
                 </a>
                 <div className="flex items-start gap-2.5">
                   <MapPinIcon className="text-primary mt-0.5 h-4 w-4 shrink-0" />
@@ -93,22 +96,22 @@ export function FooterClient() {
                 {[
                   {
                     icon: FacebookLogoIcon,
-                    href: "https://www.facebook.com/ProjektScorpio/about/",
+                    href: generalInfo.social_fb,
                     label: "Facebook",
                   },
                   {
                     icon: InstagramLogoIcon,
-                    href: "https://www.instagram.com/projektscorpio/",
+                    href: generalInfo.social_ig,
                     label: "Instagram",
                   },
                   {
                     icon: LinkedinLogoIcon,
-                    href: "https://www.linkedin.com/company/projekt-scorpio/",
+                    href: generalInfo.social_ln,
                     label: "LinkedIn",
                   },
                   {
                     icon: YoutubeLogoIcon,
-                    href: "https://www.youtube.com/@ScorpioOFFROAD",
+                    href: generalInfo.social_yt,
                     label: "YouTube",
                   },
                 ].map(({ icon: Icon, href, label }) => (

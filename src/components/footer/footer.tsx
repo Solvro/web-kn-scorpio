@@ -1,5 +1,5 @@
-import { FooterClient } from "@/components/footer/footer-clinet";
+import { FooterServer } from "@/components/footer/footer-server";
 
 export function Footer() {
-  return <FooterClient />;
+  return <FooterServer />;
 }

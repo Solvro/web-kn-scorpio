@@ -1,0 +1,9 @@
+ignoredBuiltDependencies:
+  - argon2
+  - braintrust
+  - esbuild
+  - isolated-vm
+  - oracledb
+  - protobufjs
+  - sqlite3
+  - sharp

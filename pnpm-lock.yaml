@@ -13,6 +13,9 @@ importers:
       "@base-ui/react":
         specifier: ^1.8.0
         version: 1.8.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      "@directus/sdk":
+        specifier: ^26.0.0
+        version: 26.0.0
       "@phosphor-icons/react":
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -498,6 +501,13 @@ packages:
       "@typescript-eslint/parser": ^7.0.0 || ^8.0.0
       class-validator: "*"
       eslint: ">=9.18.0"
+
+  "@directus/sdk@26.0.0":
+    resolution:
+      {
+        integrity: sha512-t6G900Rx43bTPPFtSrIX0EE6awIeJSoLbictRAVC0P/Eh4Nmud9lLfFodMAikFWe5IbocJ33Y3eio+hLZMqLTA==,
+      }
+    engines: { node: ">=22" }
 
   "@emnapi/core@1.10.0":
     resolution:
@@ -6430,6 +6440,8 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
       - typescript
+
+  "@directus/sdk@26.0.0": {}
 
   "@emnapi/core@1.10.0":
     dependencies:

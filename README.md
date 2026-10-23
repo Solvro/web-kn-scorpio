@@ -61,12 +61,10 @@ CORS_ORIGIN="true"
 
 ## Contributing
 
-1. Fork the repo, branch off `main` as `type/short-description` (e.g. `feat/course-filters`, `fix/login-redirect`)
-2. Commit using [Conventional Commits](https://docs.solvro.pl/git-github/solvro#nazewnictwo-commit%C3%B3w) (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`, `ci:`, `build:`) — commitlint enforces this
+1. Fork the repo, branch off `dev` as `type/short-description` (e.g. `feat/course-filters`, `fix/login-redirect`)
+2. Commit using [Conventional Commits](https://docs.solvro.pl/git-github/solvro#nazewnictwo-commit%C3%B3w) (`feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `ci:`, `test:`) — commitlint enforces this
 3. Push to your fork, open a PR — CI runs checks automatically
-4. Never push directly to `main`
-
-Full workflow: [Solvro GitHub Handbook](https://docs.google.com/document/d/1Sb5lYqYLnYuecS1Essn3YwietsbuLPCTsTuW0EMpG5o/edit?usp=sharing)
+4. Never push directly to `dev` or `main`
 
 ## Contributors
 

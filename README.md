@@ -1,6 +1,11 @@
 # 🚀 KN Scorpio
 
-TODO
+Website of Koło Naukowe Scorpio, the Wrocław University of Science and Technology student team building Mars rovers.
+
+## Docs
+
+- [AGENTS.md](AGENTS.md): commands, structure and conventions (for people and coding agents)
+- [docs/design-system.md](docs/design-system.md): visual language, tokens, motion, component libraries
 
 ## Stack
 

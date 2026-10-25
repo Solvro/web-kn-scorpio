@@ -19,10 +19,15 @@ import { Button } from "@/components/ui/button";
 import type { General } from "@/lib/api/general";
 
 interface FooterClientProps {
+  /** Hide links to /recruitment when that page would render nothing. */
+  recruitmentAvailable: boolean;
   generalInfo: General;
 }
 
-export function FooterClient({ generalInfo }: FooterClientProps) {
+export function FooterClient({
+  generalInfo,
+  recruitmentAvailable,
+}: FooterClientProps) {
   return (
     <footer className="border-primary bg-background text-foreground relative border-t-2">
       <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
@@ -56,19 +61,21 @@ export function FooterClient({ generalInfo }: FooterClientProps) {
                 </strong>
                 .
               </p>
-              <div className="pt-1">
-                <Button
-                  size="sm"
-                  className="group bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
-                  nativeButton={false}
-                  render={
-                    <Link href="/recruitment">
-                      Dołącz do zespołu
-                      <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  }
-                />
-              </div>
+              {recruitmentAvailable ? (
+                <div className="pt-1">
+                  <Button
+                    size="sm"
+                    className="group bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
+                    nativeButton={false}
+                    render={
+                      <Link href="/recruitment">
+                        Dołącz do zespołu
+                        <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </Link>
+                    }
+                  />
+                </div>
+              ) : null}
             </div>
 
             <div className="space-y-4">

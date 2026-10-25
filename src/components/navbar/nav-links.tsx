@@ -18,11 +18,17 @@ import {
 import { cn } from "@/lib/utils";
 
 interface NavLinksProps {
+  /** Hide the /recruitment link when that page would render nothing. */
+  recruitmentAvailable?: boolean;
   variant?: "desktop" | "mobile";
   onNavigate?: () => void;
 }
 
-export function NavLinks({ variant = "desktop", onNavigate }: NavLinksProps) {
+export function NavLinks({
+  variant = "desktop",
+  onNavigate,
+  recruitmentAvailable = true,
+}: NavLinksProps) {
   const pathname = usePathname();
   const isActive = (path: string) => {
     if (path === "/") {
@@ -47,21 +53,25 @@ export function NavLinks({ variant = "desktop", onNavigate }: NavLinksProps) {
           { href: "/successes", label: "Sukcesy" },
           { href: "/recruitment", label: "Rekrutacja" },
           { href: "/contact", label: "Kontakt" },
-        ].map((link) => (
-          <Link
-            key={link.href}
-            href={link.href as Route}
-            onClick={onNavigate}
-            className={cn(
-              "hover:text-primary text-base transition-colors",
-              isActive(link.href)
-                ? "border-primary text-primary border-l-2 pl-2 font-semibold"
-                : "text-muted-foreground",
-            )}
-          >
-            {link.label}
-          </Link>
-        ))}
+        ]
+          .filter(
+            (link) => recruitmentAvailable || link.href !== "/recruitment",
+          )
+          .map((link) => (
+            <Link
+              key={link.href}
+              href={link.href as Route}
+              onClick={onNavigate}
+              className={cn(
+                "hover:text-primary text-base transition-colors",
+                isActive(link.href)
+                  ? "border-primary text-primary border-l-2 pl-2 font-semibold"
+                  : "text-muted-foreground",
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
       </nav>
     );
   }

@@ -15,7 +15,7 @@ export function ClosingBand({
 }) {
   return (
     <FullBleedSection className="bg-primary">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-20 sm:px-6 lg:flex-row lg:items-end lg:justify-between lg:py-24">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-20 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:py-24">
         <Reveal>
           <h2 className="text-primary-foreground max-w-2xl text-4xl leading-[1.05] font-bold tracking-tighter sm:text-5xl lg:text-6xl">
             {isOpen

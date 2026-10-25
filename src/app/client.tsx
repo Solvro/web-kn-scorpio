@@ -1,13 +1,13 @@
 "use client";
 
-import { DepartmentsSection } from "@/app/departments-section";
-import { FieldGallerySection } from "@/app/field-gallery-section";
-import { HeroSection } from "@/app/hero-section";
-import { JoinSection } from "@/app/join-section";
-import { ManifestoSection } from "@/app/manifesto-section";
-import { NewsSection } from "@/app/news-section";
-import { ProjectsSection } from "@/app/projects-section";
-import { RoverSection } from "@/app/rover-section";
+import { DepartmentsSection } from "@/app/_home/departments-section";
+import { FieldGallerySection } from "@/app/_home/field-gallery-section";
+import { HeroSection } from "@/app/_home/hero-section";
+import { JoinSection } from "@/app/_home/join-section";
+import { ManifestoSection } from "@/app/_home/manifesto-section";
+import { NewsSection } from "@/app/_home/news-section";
+import { ProjectsSection } from "@/app/_home/projects-section";
+import { RoverSection } from "@/app/_home/rover-section";
 import type { Division } from "@/lib/api/divisions";
 import type { FieldPhoto } from "@/lib/api/field-photos";
 import type { HomePageContent } from "@/lib/api/home-page";

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ArrowRightIcon,
   ArrowUpRightIcon,
   CodeIcon,
   CpuIcon,
@@ -152,12 +153,12 @@ export function DepartmentExplorer({
           role="tablist"
           aria-label="Działy"
           aria-orientation="vertical"
-          className="-mx-4 flex [scrollbar-width:none] gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0 lg:col-span-4 lg:flex-col lg:overflow-visible [&::-webkit-scrollbar]:hidden"
+          className="-mx-4 flex [scrollbar-width:none] gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:px-0 lg:col-span-4 lg:flex-col lg:overflow-visible [&::-webkit-scrollbar]:hidden"
         >
           {divisions.map((dept, index) => {
             const selected = index === activeIndex;
             return (
-              <button
+              <motion.button
                 key={dept.id}
                 ref={(node) => {
                   tabReferences.current[index] = node;
@@ -172,32 +173,31 @@ export function DepartmentExplorer({
                   select(index);
                 }}
                 onKeyDown={handleKeyDown}
+                whileTap={reduce ? undefined : { scale: 0.99 }}
+                transition={{ duration: 0.15 }}
                 className={cn(
-                  "focus-visible:ring-ring/50 relative flex shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-left outline-none focus-visible:ring-3 lg:px-5 lg:py-5",
+                  "focus-visible:ring-ring/50 relative flex shrink-0 items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors duration-200 outline-none focus-visible:ring-3 lg:px-5 lg:py-5",
                   selected
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
+                    ? "text-primary-foreground"
+                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary",
                 )}
               >
                 {selected ? (
                   <motion.span
                     layoutId="department-tab"
-                    transition={{ type: "spring", stiffness: 380, damping: 34 }}
-                    className="bg-card ring-border absolute inset-0 rounded-lg ring-1"
+                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    className="bg-primary absolute inset-0 rounded-lg"
                   />
                 ) : null}
                 <DivisionIconGlyph
                   icon={dept.icon}
                   weight={selected ? "fill" : "regular"}
-                  className={cn(
-                    "relative size-5 lg:size-6",
-                    selected && "text-primary",
-                  )}
+                  className="relative size-5 lg:size-6"
                 />
                 <span className="relative text-base font-semibold whitespace-nowrap lg:text-xl">
                   {dept.name}
                 </span>
-              </button>
+              </motion.button>
             );
           })}
         </div>

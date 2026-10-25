@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowRightIcon,
   ArrowUpRightIcon,
   CodeIcon,
   CpuIcon,

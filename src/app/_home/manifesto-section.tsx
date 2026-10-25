@@ -2,7 +2,6 @@
 
 import type { MotionValue } from "motion/react";
 import { motion, useInView, useScroll, useTransform } from "motion/react";
-import Image from "next/image";
 import { useMemo, useRef, useSyncExternalStore } from "react";
 
 import { FullBleedSection } from "@/components/full-bleed-section";
@@ -10,30 +9,14 @@ import { useCountUp } from "@/hooks/use-count-up";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import type { HomePageContent } from "@/lib/api/home-page";
 import type { Stat } from "@/lib/api/stats";
-import { cmsImageLoader } from "@/lib/cms-image";
-import type { CmsImage } from "@/lib/cms-image";
 import { highlightedWords, wordText } from "@/lib/highlight";
 import type { HighlightedWord } from "@/lib/highlight";
 
-type Token =
-  { kind: "word"; word: HighlightedWord } | { kind: "image"; image: CmsImage };
-
 const PHOTO_MARKER = "{foto}";
 
-/** The i-th {foto} marker shows photos[i]; an empty slot drops its marker. */
-function buildTokens(text: string, photos: (CmsImage | null)[]): Token[] {
-  const parts = text.split(PHOTO_MARKER);
-  return parts.flatMap((part, index): Token[] => {
-    const words: Token[] = highlightedWords(part).map((word) => ({
-      kind: "word",
-      word,
-    }));
-    const photo = photos.at(index);
-    const isLastPart = index === parts.length - 1;
-    return isLastPart || photo == null
-      ? words
-      : [...words, { kind: "image", image: photo }];
-  });
+/** Photo markers are no longer rendered; strip them so they don't show up as text. */
+function buildWords(text: string): HighlightedWord[] {
+  return highlightedWords(text.replaceAll(PHOTO_MARKER, " "));
 }
 
 function unsubscribeFromNothing() {
@@ -44,42 +27,23 @@ function subscribeToNothing() {
   return unsubscribeFromNothing;
 }
 
-function RevealToken({
-  token,
+function RevealWord({
+  word,
   progress,
   range,
   animated,
 }: {
-  token: Token;
+  word: HighlightedWord;
   progress: MotionValue<number>;
   range: [number, number];
   /** False on the server and with reduced motion: render fully lit. */
   animated: boolean;
 }) {
   const opacity = useTransform(progress, range, [0.14, 1]);
-  const scale = useTransform(progress, range, [0.6, 1]);
-
-  if (token.kind === "image") {
-    return (
-      <motion.span
-        style={animated ? { opacity, scale } : undefined}
-        className="relative mx-[0.12em] inline-block h-[0.82em] w-[1.9em] overflow-hidden rounded-full align-[-0.08em]"
-      >
-        <Image
-          loader={cmsImageLoader}
-          src={token.image.src}
-          alt={token.image.alt}
-          fill
-          sizes="160px"
-          className="object-cover"
-        />
-      </motion.span>
-    );
-  }
 
   return (
     <motion.span style={animated ? { opacity } : undefined}>
-      {token.word.parts.map((part, partIndex) => (
+      {word.parts.map((part, partIndex) => (
         <span
           key={`${String(partIndex)}-${part.text}`}
           className={part.highlighted ? "text-primary" : undefined}
@@ -122,9 +86,8 @@ export function ManifestoSection({
   manifesto: HomePageContent["manifesto"];
   stats: Stat[];
 }) {
-  const tokens = useMemo(
-    () =>
-      manifesto == null ? [] : buildTokens(manifesto.text, manifesto.photos),
+  const words = useMemo(
+    () => (manifesto == null ? [] : buildWords(manifesto.text)),
     [manifesto],
   );
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -144,7 +107,7 @@ export function ManifestoSection({
   const statsRef = useRef<HTMLDivElement>(null);
   const statsInView = useInView(statsRef, { once: true, amount: 0.4 });
 
-  if (tokens.length === 0 && stats.length === 0) {
+  if (words.length === 0 && stats.length === 0) {
     return null;
   }
 
@@ -155,17 +118,13 @@ export function ManifestoSection({
           ref={textRef}
           className="text-foreground max-w-5xl text-3xl leading-[1.2] font-medium tracking-tight sm:text-4xl lg:text-[3.4rem]"
         >
-          {tokens.map((token, index) => {
-            const start = index / tokens.length;
-            const end = start + 1 / tokens.length;
-            const key =
-              token.kind === "word"
-                ? `${wordText(token.word)}-${String(index)}`
-                : `${token.image.src}-${String(index)}`;
+          {words.map((word, index) => {
+            const start = index / words.length;
+            const end = start + 1 / words.length;
             return (
-              <RevealToken
-                key={key}
-                token={token}
+              <RevealWord
+                key={`${wordText(word)}-${String(index)}`}
+                word={word}
                 progress={scrollYProgress}
                 range={[start, end]}
                 animated={animated}

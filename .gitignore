@@ -49,4 +49,6 @@ next-env.d.ts
 #cms
 #/cms/data.db
 /cms/node_modules
+# Directus generates resized variants (<id>__<hash>.<ext>) on demand; keep only originals
+/cms/uploads/*__*
 #/cms/uploads

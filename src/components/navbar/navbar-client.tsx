@@ -15,7 +15,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export function NavbarClient() {
+export function NavbarClient({
+  recruitmentAvailable,
+}: {
+  /** Hide links to /recruitment when that page would render nothing. */
+  recruitmentAvailable: boolean;
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -24,16 +29,21 @@ export function NavbarClient() {
         <Logo className="text-2xl" />
 
         <div className="hidden lg:flex">
-          <NavLinks variant="desktop" />
+          <NavLinks
+            variant="desktop"
+            recruitmentAvailable={recruitmentAvailable}
+          />
         </div>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Button
-            size="sm"
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-            nativeButton={false}
-            render={<Link href="/recruitment">Dołącz do nas</Link>}
-          />
+          {recruitmentAvailable ? (
+            <Button
+              size="sm"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              nativeButton={false}
+              render={<Link href="/recruitment">Dołącz do nas</Link>}
+            />
+          ) : null}
         </div>
 
         <div className="lg:hidden">
@@ -58,6 +68,7 @@ export function NavbarClient() {
               </SheetHeader>
               <NavLinks
                 variant="mobile"
+                recruitmentAvailable={recruitmentAvailable}
                 onNavigate={() => {
                   setIsOpen(false);
                 }}

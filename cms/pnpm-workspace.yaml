@@ -1,9 +1,11 @@
-ignoredBuiltDependencies:
+# Native modules Directus needs at runtime; pnpm skips build scripts unless listed.
+onlyBuiltDependencies:
   - argon2
+  - isolated-vm
+  - sharp
+  - sqlite3
+ignoredBuiltDependencies:
   - braintrust
   - esbuild
-  - isolated-vm
   - oracledb
   - protobufjs
-  - sqlite3
-  - sharp

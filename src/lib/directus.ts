@@ -1,7 +1,6 @@
 import { createDirectus, rest } from "@directus/sdk";
 
-const directusUrl =
-  process.env.NEXT_PUBLIC_DIRECTUS_URL ?? "http://localhost:8055";
+import { directusUrl } from "@/lib/directus-url";
 
 export const directus = createDirectus(directusUrl).with(rest());
 

@@ -68,7 +68,7 @@ function CollageImage({
       style={reduce ? undefined : { y }}
     >
       {/* Entrance is a CSS keyframe (globals.css), so the photos are visible
-          without JavaScript; hover straightens them with a CSS transition. */}
+          without JavaScript. */}
       <div
         style={
           {
@@ -76,7 +76,7 @@ function CollageImage({
             animationDelay: `${String(0.2 + index * 0.15)}s`,
           } as CSSProperties
         }
-        className="ring-border motion-safe:animate-collage-in motion-safe:ease-out-expo relative h-full w-full [transform:rotate(var(--rotate))] overflow-hidden rounded-lg shadow-[0_30px_60px_-20px_oklch(0.1_0.005_285/0.8)] ring-1 motion-safe:transition-transform motion-safe:duration-500 motion-safe:hover:[transform:scale(1.04)_rotate(0deg)]"
+        className="ring-border motion-safe:animate-collage-in motion-safe:ease-out-expo relative h-full w-full [transform:rotate(var(--rotate))] overflow-hidden rounded-lg shadow-[0_30px_60px_-20px_oklch(0.1_0.005_285/0.8)] ring-1"
       >
         <Image
           loader={cmsImageLoader}

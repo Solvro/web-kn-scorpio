@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
@@ -11,14 +12,20 @@ export function Logo({ className }: LogoProps) {
     <Link
       href="/"
       className={cn(
-        "text-foreground inline-flex items-center gap-1 text-xl font-black tracking-widest transition-opacity hover:opacity-90",
+        "inline-flex items-center transition-opacity hover:opacity-90",
         className,
       )}
       aria-label="Strona główna SCORPIO"
     >
-      SC
-      <span className="bg-primary inline-block size-2.5 rounded-full" />
-      RPIO
+      <Image
+        src="/kn-scorpio-logo.png"
+        alt="SCORPIO"
+        width={2560}
+        height={698}
+        sizes="160px"
+        className="h-10 w-auto"
+        priority
+      />
     </Link>
   );
 }

@@ -26,7 +26,7 @@ export function NavbarClient({
   return (
     <header className="border-border bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Logo className="text-2xl" />
+        <Logo />
 
         <div className="hidden lg:flex">
           <NavLinks

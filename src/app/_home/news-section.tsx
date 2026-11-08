@@ -45,7 +45,7 @@ export function NewsSection({
         <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-12">
           <Reveal delay={100} className="lg:col-span-7">
             <Link
-              href="/news"
+              href={`/news/${featured.slug}`}
               className="group bg-card hover:bg-accent/60 relative flex h-full min-h-[320px] flex-col justify-between overflow-hidden rounded-lg p-8 transition-colors duration-300 sm:p-10"
             >
               <div
@@ -71,7 +71,7 @@ export function NewsSection({
             {rest.slice(0, 3).map((item, index) => (
               <Reveal key={item.id} delay={180 + index * 80} className="flex-1">
                 <Link
-                  href="/news"
+                  href={`/news/${item.slug}`}
                   className="group border-border hover:border-primary/60 flex h-full items-center justify-between gap-6 rounded-lg border p-6 transition-colors duration-300"
                 >
                   <h3 className="text-foreground text-lg leading-snug font-semibold">

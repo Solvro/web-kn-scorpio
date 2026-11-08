@@ -34,6 +34,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-plate: var(--plate);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -128,6 +129,8 @@
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.22 0.005 285);
   --card-foreground: oklch(0.985 0 0);
+  /* Light plate behind partner logos, which are made for white backgrounds. */
+  --plate: oklch(0.94 0.004 285);
   --popover: oklch(0.22 0.005 285);
   --popover-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.27 0.01 38.5);

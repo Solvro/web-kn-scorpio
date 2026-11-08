@@ -29,12 +29,14 @@ All tokens are CSS variables in `src/app/globals.css` (`:root`), exposed to Tail
 | `--secondary`          | `oklch(0.27 0.01 38.5)` | Warm dark tint (gradient end on the farming tile)         |
 | `--accent`             | `oklch(0.28 0.03 38.5)` | Hover tint                                                |
 | `--border`             | `oklch(1 0 0 / 12%)`    | Hairlines, outlines                                       |
+| `--plate`              | `oklch(0.94 0.004 285)` | Light plate behind partner logos (`bg-plate`)             |
 
 Rules:
 
 - **One accent.** Orange is the only saturated colour. Don't introduce a second accent (no blue links, no green badges).
 - Text over photos uses `text-foreground` or `text-foreground/80`, never `text-primary`: orange disappears over desert photos.
 - Photo legibility comes from scrims, not text shadows: `bg-linear-to-t from-background via-background/50 to-transparent` (plus `bg-linear-to-r from-background/70` on desktop when text sits on the left).
+- Partner logos are shown in full colour on `bg-plate`, never inverted: most are made for white backgrounds and several are boxed (navy, green, grey), which a white silhouette would turn into blank rectangles. `LogoMark` sizes each logo by area (`sqrt(area * aspect)`), so long wordmarks and square badges carry the same visual weight.
 - Shadows are tinted with the background hue (`oklch(0.1 0.005 285 / 0.8)`), never pure black.
 
 ### Typography
@@ -97,6 +99,11 @@ Patterns in use, with the reason each exists:
 | Opposing marquees                      | "W terenie" gallery                    | Breadth of field photos without asking for interaction                            |
 | Cursor-following preview               | Departments list                       | Connects each department name to a real photo of that team                        |
 | Self-drawing connector                 | "Jak dołączyć"                         | Reads the three steps as one sequence                                             |
+| Sliding filter pill (`FilterChips`)    | News, successes archive                | Shows which filter is active and where the selection moved                        |
+| `layout` reflow + fade on filter       | News grid, successes archive           | Cards that stay keep their identity while the list re-flows                       |
+| Sticky stacking cards with recede      | Successes "wyniki, z których..."       | One big result at a time; earlier ones stay visible behind, so it reads as a pile |
+| Medal bar growing from the left        | Successes tally                        | Shows the 1st/2nd/3rd split as parts of the podium total                          |
+| Sticker slap-on, straighten on hover   | Partner sheets                         | Logos read as decals applied to the rover; hover settles the one being read       |
 
 Rules:
 
@@ -143,7 +150,7 @@ Local adjustments to note:
 - `DialogContent` accepts `overlayClassName` (added for the photo modal's stronger backdrop).
 - `Marquee` pauses under `prefers-reduced-motion` and was edited to pass lint. Loop copies are `aria-hidden`; interactive children call `useIsMarqueeCopy()` and set `tabIndex={-1}` in copies (not `inert`: copies are on screen and must stay clickable).
 
-Site components: `FullBleedSection` (accepts a `ref`), `Reveal`, `HighlightedText`, `Navbar`, `Footer`, `Logo`, `ScrollToTop`. Hooks: `useScrollReveal` (scroll reveals), `useCountUp`, `usePrefersReducedMotion` (use instead of Motion's `useReducedMotion`), `useRecruitmentStatus`. In-view detection goes through `useScrollReveal`, which uses Motion's `inView`; don't add another observer hook.
+Site components: `FullBleedSection` (accepts a `ref`), `Reveal`, `FilterChips`, `HighlightedText`, `Navbar`, `Footer`, `Logo`, `ScrollToTop`. Hooks: `useScrollReveal` (scroll reveals), `useCountUp`, `usePrefersReducedMotion` (use instead of Motion's `useReducedMotion`), `useRecruitmentStatus`. In-view detection goes through `useScrollReveal`, which uses Motion's `inView`; don't add another observer hook.
 
 Buttons:
 
@@ -154,7 +161,7 @@ Buttons:
 
 ## Page patterns
 
-Each section uses a different layout family; don't repeat one on the same page. All copy and images on both pages come from the CMS (collections listed per section); the layout, animation and section order stay in code.
+Each section uses a different layout family; don't repeat one on the same page. All copy and images on these pages come from the CMS (collections listed per section); the layout, animation and section order stay in code.
 
 ### Home (`src/app/client.tsx`)
 
@@ -174,6 +181,28 @@ Each section uses a different layout family; don't repeat one on the same page. 
 3. **Department explorer** (`department-explorer.tsx`): accessible tabs (arrow keys, Home/End) and an animated panel. Deep-linkable via the URL hash. `divisions` (shared with the home page).
 4. **Co zyskujesz**: three-tile photo bento; the first item takes the large tile. `recruitment_benefits`.
 5. **Closing band**: full-width orange band with deadline and CTAs.
+
+### News (`src/app/news/client.tsx`, `[slug]/page.tsx`)
+
+1. **Header**: page title and category `FilterChips` (only categories that have articles, with counts).
+2. **Featured**: newest article as a 7/5 split, photo left.
+3. **Year groups**: faint sticky year on the left, two-column cards on the right; an odd count opens with a wide horizontal card so the grid has no holes. A missing cover becomes an orange tile with the category icon. `news` (sorted by `published_at`).
+4. **Article**: title, 21:9 cover with clip reveal, body in an 8-column reading measure (paragraphs, `## ` subheadings), "Czytaj dalej" with two other articles.
+
+### Successes (`src/app/successes/client.tsx`)
+
+1. **Hero**: full-bleed team photo with the flag, bottom-left headline. `successes_page.hero_*`.
+2. **Tally**: count-up podium total, medal bar (I/II/III), then wins, distinctions and titles; trophy photo on the right. Every number is counted from `achievements`.
+3. **Featured results**: sticky stacking cards (md and up; a plain list on phones). Roman place numeral, story, photo or a rover drawing (PNG cut-outs are shown whole on a warm radial glow). `achievements` with `featured`.
+4. **Rover Challenge matrix**: a real `<table>`, competitions in order of first start × years with a result; place badges and distinction counts, sticky first column when it scrolls sideways on phones.
+5. **Archive**: `FilterChips` by series, year groups with a sticky faint year and a two-column list of `PlaceBadge` entries.
+
+### Partners (`src/app/partners/client.tsx`)
+
+1. **Hero**: copy and the two actions ("Oferta współpracy" downloads the PDF from the CMS, with its size; "Napisz do nas"), photo on the right. `partners_page`.
+2. **Partner band**: one full-bleed band with three tiers (main partners, partners, supporters), each under a large ghosted tier heading. Partners are **stickers** (decals, the way sponsors appear on a rover): light plates with a fixed slight tilt (`TILTS`/`NUDGES`, deterministic so server and client match), sized by tier, loosely packed and centred, so any count closes cleanly. They land with a small overshoot when scrolled into view and straighten and lift on hover or focus. With a mouse on wide screens the description opens in a card under the sticker; on phones and touch it is printed under it. The partners sheet ends with an orange "Zostań partnerem" sticker linking to the pitch (`#zostan-partnerem`).
+3. **News about partners**: articles in the `partners` category.
+4. **Closing pitch**: same two actions, plus the `stats` numbers and a link to the successes page.
 
 ## Imagery
 

@@ -62,12 +62,16 @@ src/
     *-section.tsx            Home page sections (hero, manifesto, rover, field gallery, ...)
     recruitment/             Recruitment page (page.tsx fetches; hero, department explorer, ...)
     contact/                 Contact page (CMS-backed, async Server Components)
-    news/, team/, projects/, partners/, successes/
+    news/                    Year-grouped news grid with category filter; [slug]/ article pages
+    partners/                Partner tiers on light logo plates, cooperation offer
+    successes/               Medal tally, featured results, Rover Challenge matrix, archive
+    team/, projects/
   components/
     ui/                      shadcn / Base UI primitives (owned, edit freely)
     navbar/, footer/         Site chrome
     full-bleed-section.tsx   Breaks a section out of the max-w-7xl layout wrapper
     reveal.tsx               Fade-up-on-scroll wrapper; server HTML stays visible
+    filter-chips.tsx         Toggle-button filter with a sliding active pill (news, successes)
     highlighted-text.tsx     Renders CMS text with *highlight* markers
   hooks/                     use-scroll-reveal, use-count-up, use-prefers-reduced-motion,
                              use-recruitment-status (one open/closed source per page)
@@ -76,14 +80,16 @@ src/
     directus-url.ts          CMS base URL (no SDK import, safe in client code)
     cms-image.ts             CmsImage type, toCmsImage(), next/image loader for CMS images
     highlight.ts             *highlight* parser
+    news.ts, achievements.ts Client-safe helpers (labels, dates, roman numerals, Polish plurals, tally)
     recruitment-deadline.ts  Deadline formatting (pl-PL, Europe/Warsaw) and open/closed check
     api/                     One fetcher per CMS collection (home-page, divisions, rovers, ...)
     utils.ts                 cn() = twMerge(clsx())
 public/
   rovers/                    Original rover renders and line art (source material, not used by the site)
 cms/                         Directus project: own package.json, data.db (SQLite), uploads/, .env.example
-  scripts/setup-pages.mjs    Creates the home/recruitment collections, uploads seed images, seeds content
-  seed/                      Original images the setup script uploads (photos, transparent rover cut-outs)
+  scripts/setup-pages.mjs    Creates the page collections, uploads seed files, seeds content
+  seed/                      Original files the setup script uploads (photos, rover cut-outs, partner logos,
+                             news/content.json with the articles from the original site, the offer PDF)
 docs/
   design-system.md           Visual language, tokens, motion, components, patterns
 .env.example                 NEXT_PUBLIC_DIRECTUS_URL
@@ -96,11 +102,12 @@ Page pattern: `page.tsx` is an async Server Component that exports `metadata`, f
 - **Fetchers:** one file per collection in `src/lib/api/`, using `directus.request(readItems(...))` or `readSingleton(...)` with an explicit `fields` list. They map CMS records to page-ready types (images as `CmsImage`, paragraphs split, ...). On error they call `logDirectusError` and return an empty fallback (`[]` or `null`), so pages never crash when the CMS is down.
 - **Call fetchers from Server Components** (`page.tsx` or async components), never from client components. Pass plain data into client sections as props.
 - **Missing data hides the section.** Sections return `null` when their CMS data is empty instead of rendering placeholders, and a heading renders only when its title is non-empty. Fetchers pass text through `cleanText` (`src/lib/api/text.ts`), which trims and turns empty or whitespace-only values into `null`. Required CMS text fields also reject whitespace-only input.
-- **Freshness:** home and recruitment use `export const revalidate = 300`: they're static but re-rendered at most every 5 minutes, so CMS edits appear without a redeploy, and a build made while the CMS was down (CI) fixes itself. The root layout also sets `revalidate = 300`, because the navbar and footer read the CMS (contact details, recruitment availability), so every static page refreshes them too. The contact page uses `dynamic = "force-dynamic"`.
+- **Freshness:** home, recruitment, news (and articles), partners and successes use `export const revalidate = 300`: they're static but re-rendered at most every 5 minutes, so CMS edits appear without a redeploy, and a build made while the CMS was down (CI) fixes itself. The root layout also sets `revalidate = 300`, because the navbar and footer read the CMS (contact details, recruitment availability), so every static page refreshes them too. The contact page uses `dynamic = "force-dynamic"`.
+- **Numbers come from the data.** The successes page counts podiums, wins, distinctions and titles from `achievements` (`tallyAchievements`), and partners shows the `stats` collection. Don't hardcode a count that the CMS can produce.
 - **Images from the CMS:** request file fields with `fileFields("image")`, convert with `toCmsImage(file, alt)`, render with `next/image` and `loader={cmsImageLoader}`. Directus resizes and serves AVIF/WebP itself (`/assets/<id>?width=...&format=auto`). Don't route CMS images through the Next optimizer: since Next 16 it refuses private hosts like `localhost`. Resized variants are cached in `cms/uploads/*__*` and git-ignored; only originals are committed.
 - **Editable copy with constraints:** text fields carry a character limit enforced by a validation rule (SQLite ignores `varchar` lengths). `*word*` marks a highlight (rendered by `HighlightedText` / `highlightedWords`), and the asterisks count toward the limit. The home manifesto also accepts up to two `{foto}` markers, replaced by its photos in order. Limits were checked in the browser at exactly the maximum length; if you change one, re-check desktop and phone.
-- **Schema source of truth:** `cms/scripts/setup-pages.mjs` defines the home and recruitment collections, fields, limits, notes (Polish, for editors) and public read access, including read on `directus_files` (needed for image fields and `/assets/<id>`). File fields are always nullable columns (their relation uses `on_delete: SET NULL`); `required` is enforced through field meta, so images stay deletable. Run `pnpm setup:pages` in `cms/` (not `pnpm setup`, which is a pnpm built-in). It's idempotent: it creates what's missing, re-applies field rules, uploads images from `cms/seed/` only once, and seeds content only into empty collections, so it never overwrites edits. Change those collections by editing the script and re-running it, not only in the admin UI.
-- **`cms/data.db` is binary and can't be merged.** If it conflicts, take the other side's file, start the CMS and run `pnpm setup:pages`; this restores the home and recruitment collections and their seed content. Edits made in the CMS since the seed are only in the database file, so coordinate who changes the database when.
+- **Schema source of truth:** `cms/scripts/setup-pages.mjs` defines the home, recruitment, news, achievements, partners and successes/partners page collections, fields, limits, notes (Polish, for editors) and public read access, including read on `directus_files` (needed for image fields and `/assets/<id>`). File fields are always nullable columns (their relation uses `on_delete: SET NULL`); `required` is enforced through field meta, so images stay deletable. Run `pnpm setup:pages` in `cms/` (not `pnpm setup`, which is a pnpm built-in). It's idempotent: it creates what's missing, re-applies field rules, uploads images from `cms/seed/` only once, and seeds content only into empty collections, so it never overwrites edits. Change those collections by editing the script and re-running it, not only in the admin UI.
+- **`cms/data.db` is binary and can't be merged.** If it conflicts, take the other side's file, start the CMS and run `pnpm setup:pages`; this restores those collections and their seed content. Edits made in the CMS since the seed are only in the database file, so coordinate who changes the database when.
 - **Adding another collection:** prefer extending the setup script (or a similar one) over clicking it together in the admin, then add a fetcher in `src/lib/api/`. If you do create it in the admin, grant the Public policy `read` and commit `cms/data.db` and new files in `cms/uploads/`.
 - **Every file in the CMS is public.** The Public policy can read `directus_files` (image fields and `/assets/<id>` need it), so anyone can list and download every upload. This edition of Directus doesn't allow per-file or per-folder permission rules (`custom_permission_rules_enabled` is a licensed feature), so access can't be narrowed. Upload only material meant for the website; never CVs, applications or internal documents. The setup script puts this warning on the file library (in Polish), and a licensed Directus with folder-scoped rules is the way to lift the restriction.
 - `cms/.env.example` holds local development credentials only (`ADMIN_PASSWORD="1234"`); never reuse them for a deployed CMS.
@@ -152,3 +159,13 @@ Code pulled from shadcn or Magic UI registries usually needs these fixes after i
 2. Prefer an existing library component (shadcn, Magic UI or another registry compatible with `components.json`) over hand-rolling: `npx shadcn@latest add <name-or-registry-url>`.
 3. After installing, review the diff: registries may add unrelated CSS to `globals.css` (e.g. a `@custom-variant dark` line) and code that fails the lint rules above.
 4. Don't add a dependency for something an existing one already covers (Motion for animation, Embla for carousels, Base UI `Dialog` for modals).
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

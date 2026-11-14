@@ -163,7 +163,7 @@ function PitchSection({
         aria-hidden
         className="bg-primary/15 absolute -top-40 -left-40 size-[520px] rounded-full blur-3xl"
       />
-      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-14 px-4 sm:px-6 lg:grid-cols-12 lg:items-end">
+      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-14 px-4 sm:px-6 lg:grid-cols-12 lg:items-center">
         <Reveal className="lg:col-span-6">
           <h2 className="text-foreground text-4xl font-bold tracking-tighter text-balance sm:text-5xl lg:text-6xl">
             <HighlightedText text={page.pitch.title} />

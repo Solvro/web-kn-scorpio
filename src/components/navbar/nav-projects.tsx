@@ -89,7 +89,7 @@ export function NavProjects() {
         z aluminium lotniczego i poliamidu – lekkich materiałów.
       </ListItem>
 
-      <li className="border-border/80 mt- col-span-1 border-t pt-3 md:col-span-2">
+      <li className="border-border/80 col-span-1 border-t pt-3 md:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-xs">
           <span className="text-muted-foreground font-medium">Pozostałe:</span>
           <div className="flex items-center gap-3">

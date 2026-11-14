@@ -1,4 +1,4 @@
-import { SendIcon } from "lucide-react";
+import { MessageSquareIcon, SendIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,25 +30,35 @@ const MESSAGE_SUBJECTS = [
 
 export function ContactForm() {
   return (
-    <Card className="relative p-8">
-      <div className="bg-primary/10 pointer-events-none absolute -top-24 -right-24 size-48 rounded-full blur-3xl" />
+    <Card className="relative overflow-hidden p-8">
+      <div
+        aria-hidden
+        className="via-primary/40 absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
+      />
       <CardHeader className="border-b">
-        <CardTitle className="text-xl">Formularz kontaktowy</CardTitle>
-        <CardDescription className="text-sm">
-          Wypełnij formularz, a odpowiemy najszybciej jak to możliwe.
-        </CardDescription>
+        <div className="flex items-center gap-3">
+          <div className="bg-primary/10 border-primary/20 text-primary rounded-lg border p-2">
+            <MessageSquareIcon aria-hidden className="size-5" />
+          </div>
+          <div>
+            <CardTitle className="text-xl">Formularz kontaktowy</CardTitle>
+            <CardDescription className="text-sm">
+              Wypełnij formularz, a odpowiemy najszybciej jak to możliwe.
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="mt-6">
         <form>
           <FieldSet>
-            <FieldGroup className="grid grid-cols-2 gap-4">
+            <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="name">Imię i Nazwisko *</FieldLabel>
                 <Input
                   id="name"
                   type="text"
                   autoComplete="off"
-                  placeholder="Jan Kowalki"
+                  placeholder="Jan Kowalski"
                   required
                 />
               </Field>
@@ -72,7 +82,7 @@ export function ContactForm() {
                   <SelectContent>
                     <SelectGroup>
                       {MESSAGE_SUBJECTS.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
+                        <SelectItem key={item.label} value={item.value}>
                           {item.label}
                         </SelectItem>
                       ))}
@@ -87,18 +97,24 @@ export function ContactForm() {
                 <Textarea
                   name="message"
                   id="message"
-                  rows={10}
+                  rows={6}
                   required
-                  className="min-h-32 resize-none"
+                  className="min-h-40 resize-none"
                   placeholder="Opisz swoje pytanie lub propozycję współpracy..."
                 ></Textarea>
               </Field>
             </FieldGroup>
           </FieldSet>
-          <Button type="submit" className="mt-6 w-full py-5">
-            <SendIcon className="size-4" />
+          <Button type="submit" className="group mt-6 w-full py-5">
+            <SendIcon
+              aria-hidden
+              className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
+            />
             Wyślij wiadomość
           </Button>
+          <p className="text-muted-foreground mt-3 text-center text-xs">
+            Pola oznaczone * są wymagane.
+          </p>
         </form>
       </CardContent>
     </Card>

@@ -30,7 +30,6 @@ const SECTIONS: {
   title: string;
   description: string;
   icon: LucideIcon;
-  gridClass: string;
 }[] = [
   {
     group: "management",
@@ -38,7 +37,6 @@ const SECTIONS: {
     description:
       "Osoby odpowiedzialne za kierunek rozwoju projektu i koordynację prac zespołu.",
     icon: UsersIcon,
-    gridClass: "sm:grid-cols-2 lg:grid-cols-4",
   },
   {
     group: "advisor",
@@ -46,7 +44,6 @@ const SECTIONS: {
     description:
       "Kadra akademicka wspierająca projekt merytorycznie i naukowo.",
     icon: UserIcon,
-    gridClass: "md:grid-cols-3",
   },
   {
     group: "construction",
@@ -54,14 +51,12 @@ const SECTIONS: {
     description:
       "Projektowanie i rozwój mechanicznej konstrukcji łazików marsjańskich.",
     icon: SettingsIcon,
-    gridClass: "sm:grid-cols-2 lg:grid-cols-4",
   },
   {
     group: "electronics",
     title: "Elektronika",
     description: "Układy zasilania, PCB i systemy sterowania platformy.",
     icon: FlashlightIcon,
-    gridClass: "sm:grid-cols-2 lg:grid-cols-4",
   },
   {
     group: "software",
@@ -69,7 +64,6 @@ const SECTIONS: {
     description:
       "Oprogramowanie autonomii, telemetrii, sterowania i przetwarzania danych.",
     icon: MonitorIcon,
-    gridClass: "sm:grid-cols-2 lg:grid-cols-4",
   },
   {
     group: "science",
@@ -77,7 +71,6 @@ const SECTIONS: {
     description:
       "Eksperymenty naukowe, analiza próbek i scenariusze misji badawczych.",
     icon: FlaskConicalIcon,
-    gridClass: "sm:grid-cols-2 lg:grid-cols-4",
   },
   {
     group: "marketing",
@@ -85,9 +78,12 @@ const SECTIONS: {
     description:
       "Komunikacja zespołu, partnerstwa i obecność projektu w mediach.",
     icon: MegaphoneIcon,
-    gridClass: "sm:grid-cols-2 lg:grid-cols-4",
   },
 ];
+
+/** Same columns for every section, so all tiles have identical width and height. */
+const GRID_CLASS =
+  "grid grid-cols-1 auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-4";
 
 const STANDALONE_GROUPS = new Set<TeamGroup>(["management", "advisor"]);
 
@@ -179,15 +175,9 @@ function SectionHeading({
   );
 }
 
-function MembersGrid({
-  members,
-  gridClass,
-}: {
-  members: TeamMemberData[];
-  gridClass: string;
-}) {
+function MembersGrid({ members }: { members: TeamMemberData[] }) {
   return (
-    <div className={cn("grid grid-cols-1 gap-6", gridClass)}>
+    <div className={GRID_CLASS}>
       {members.map((member, index) => (
         <TeamMember key={member.id} member={member} index={index} />
       ))}
@@ -338,7 +328,7 @@ function DepartmentTabs({ members }: { members: TeamMemberData[] }) {
             description={active.description}
             icon={active.icon}
           />
-          <MembersGrid members={activeMembers} gridClass={active.gridClass} />
+          <MembersGrid members={activeMembers} />
         </motion.div>
       </AnimatePresence>
     </section>
@@ -456,10 +446,7 @@ export function TeamPageClient({ members }: { members: TeamMemberData[] }) {
                     icon={section.icon}
                   />
                 </FadeIn>
-                <MembersGrid
-                  members={sectionMembers}
-                  gridClass={section.gridClass}
-                />
+                <MembersGrid members={sectionMembers} />
               </section>
             );
           })}

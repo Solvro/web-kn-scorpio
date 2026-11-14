@@ -32,6 +32,7 @@ export function TeamMember({
 
   return (
     <motion.div
+      className="h-full"
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -41,9 +42,9 @@ export function TeamMember({
         ease: "easeOut",
       }}
     >
-      <Card className="group hover:border-primary/40 hover:shadow-primary/10 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-        <CardContent className="p-0">
-          <div className="bg-muted relative aspect-square w-full overflow-hidden">
+      <Card className="group hover:border-primary/40 hover:shadow-primary/10 h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+        <CardContent className="flex h-full flex-col p-0">
+          <div className="bg-muted relative aspect-square w-full shrink-0 overflow-hidden">
             <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100">
               {hasPhoto ? (
                 <Image
@@ -88,13 +89,21 @@ export function TeamMember({
               )}
             </div>
           </div>
-          <div className="space-y-2 p-5 text-center">
-            <h3 className="text-foreground group-hover:text-primary text-lg font-bold transition-colors duration-300">
+          {/* One line for the name and one for the role: every tile has the same height, without empty gaps */}
+          <div className="flex flex-1 flex-col items-center gap-1.5 px-5 py-4 text-center">
+            <h3
+              title={member.name}
+              className="text-foreground group-hover:text-primary w-full truncate text-lg leading-7 font-bold transition-colors duration-300"
+            >
               {member.name}
             </h3>
-            {member.role == null || member.role === "" ? null : (
-              <Badge variant="outline-sm">{member.role}</Badge>
-            )}
+            <div className="flex min-h-6 max-w-full items-center justify-center">
+              {member.role == null || member.role === "" ? null : (
+                <Badge variant="outline-sm" className="max-w-full truncate">
+                  {member.role}
+                </Badge>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -131,7 +131,7 @@ function CountUp({ value }: { value: number }) {
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    if (!inView || reduce) {
+    if (!inView || reduce === true) {
       return;
     }
     const controls = animate(0, value, {
@@ -146,7 +146,7 @@ function CountUp({ value }: { value: number }) {
     };
   }, [inView, reduce, value]);
 
-  return <span ref={reference}>{reduce ? value : display}</span>;
+  return <span ref={reference}>{reduce === true ? value : display}</span>;
 }
 
 /* -------------------------------------------------------------------------- */

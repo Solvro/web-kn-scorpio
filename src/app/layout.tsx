@@ -31,7 +31,7 @@ export default async function RootLayout({
 }>) {
   const recruitmentAvailable = await isRecruitmentAvailable();
   return (
-    <html lang="en">
+    <html lang="en" className="overscroll-y-none">
       <QueryProvider>
         <body className={`${space_grotesk.variable} font-sans antialiased`}>
           <Navbar recruitmentAvailable={recruitmentAvailable} />

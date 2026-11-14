@@ -94,10 +94,12 @@ function NavigationMenuContent({
   );
 }
 
+const NAV_HEIGHT = 64;
+const GAP = 2;
+
 function NavigationMenuPositioner({
   className,
   side = "bottom",
-  sideOffset = 8,
   align = "start",
   alignOffset = 0,
   ...props
@@ -106,16 +108,26 @@ function NavigationMenuPositioner({
     <NavigationMenuPrimitive.Portal>
       <NavigationMenuPrimitive.Positioner
         side={side}
-        sideOffset={sideOffset}
         align={align}
         alignOffset={alignOffset}
+        sideOffset={({ anchor }) => (NAV_HEIGHT - anchor.height) / 2 + GAP}
+        positionMethod="fixed"
         className={cn(
           "isolate z-50 h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-[top,left,right,bottom] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] data-instant:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0",
           className,
         )}
         {...props}
       >
-        <NavigationMenuPrimitive.Popup className="data-[ending-style]:easing-[ease] xs:w-(--popup-width) bg-popover text-popover-foreground ring-foreground/10 relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) rounded-lg shadow ring-1 transition-[opacity,transform,width,height,scale,translate] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-90 data-starting-style:opacity-0">
+        <NavigationMenuPrimitive.Popup
+          className={cn(
+            "data-[ending-style]:easing-[ease] xs:w-(--popup-width) bg-popover text-popover-foreground ring-foreground/10 relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) rounded-lg shadow ring-1 transition-[opacity,transform,width,height,scale,translate] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-90 data-starting-style:opacity-0",
+            "rounded-t-none rounded-b-lg",
+            "border border-t-0",
+            "shadow-lg shadow-black/20",
+            "origin-top",
+            className,
+          )}
+        >
           <NavigationMenuPrimitive.Viewport className="relative size-full overflow-hidden" />
         </NavigationMenuPrimitive.Popup>
       </NavigationMenuPrimitive.Positioner>

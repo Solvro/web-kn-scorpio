@@ -5,7 +5,6 @@ import type { Achievement } from "@/lib/achievements";
 import type { SuccessesPageContent } from "@/lib/api/achievements";
 
 import { ArchiveSection } from "./archive-section";
-import { ResultsMatrix } from "./results-matrix";
 import { StoriesSection } from "./stories-section";
 import { SuccessesHero } from "./successes-hero";
 import { TallySection } from "./tally-section";
@@ -33,11 +32,6 @@ export function SuccessesPageClient({
       <StoriesSection
         title={page?.storiesTitle ?? null}
         stories={achievements.filter((item) => item.featured)}
-      />
-      <ResultsMatrix
-        title={page?.matrix.title ?? null}
-        intro={page?.matrix.intro ?? null}
-        achievements={achievements}
       />
       <ArchiveSection
         title={page?.archiveTitle ?? null}
